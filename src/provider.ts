@@ -78,7 +78,6 @@ export async function getRemoteProviderWhen(wallets: Array<string>, isInIframe= 
                         targetUrl = origin
                         resolve(wallets.indexOf(wallet) !== -1)
                         window.removeEventListener('message', listner)
-                        returnRemoteProvider = true
                     }
                 }
                 window.addEventListener('message', listner)

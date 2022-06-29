@@ -11,7 +11,7 @@ export const is: {[key: string]: () => boolean} = {
 }
 export function getWallet(): string {
     for( const value of [BRAVE]) {
-        if(is[value]) {
+        if(is[value]()) {
             return value
         }
     }
