@@ -31,14 +31,33 @@ import { getRemoteProviderWhen, BRAVE } from '@synaps-io/web3-provider'
 
 ### In your frame that have your Web3 provider
 ```js
-import { installProviderProxyFor, BRAVE } from '@synaps-io/web3-provider'
+const uninstallProviderProxy = installProviderProxyFor(wallets=[BRAVE], target=YOUR_WINDOW, targetUrl=YOUR_WINDOW_URL)
 ```
 ### In the frame that you want to use the remote provider
 ```js
-const uninstallProviderProxy = installProviderProxyFor([BRAVE], YOUR_WINDOW, YOUR_WINDOW_URL)
+const provider = new ethers.providers.Web3Provider(await getRemoteProviderWhen(wallets=[BRAVE]))
 ```
-## Functions
-
+## Documentation
+### installProviderProxyFor
+Allows to set up the receiver of the interactions with the Wallet according to the criterion Wallet
+```js
+const uninstallProviderProxy = installProviderProxyFor(wallets=[BRAVE], target=YOUR_WINDOW, targetUrl=YOUR_WINDOW_URL)
+```
+### getRemoteProviderWhen
+it allows to have the remoteProvider if the wallet criterion and the page criterion an iframe or not are respected or it returns the default provider `window.ethereum`
+```js
+const provider = new ethers.providers.Web3Provider(await getRemoteProviderWhen(wallets=[BRAVE]))
+```
+### RemoteProvider
+Web3 Provider which allows to transfer the interactions to another frame
+```js
+const provider = new ethers.providers.Web3Provider(new RemoteProvider(target=WINDOW_FRAME, targetUrl=WINDOW_FRAME_URL))
+```
+### installProviderProxy
+Allows to set up the receiver of the interactions with the Wallet
+```js
+const uninstallProviderProxy = installProviderProxy(target=YOUR_WINDOW, targetUrl=YOUR_WINDOW_URL)
+```
 
 ## License
 MIT © [Synaps](https://www.synaps.io/)

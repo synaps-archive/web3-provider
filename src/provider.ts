@@ -1,5 +1,8 @@
 import {v4 as uuid4} from 'uuid'
 
+/**
+ *  Provider that permit to forward wallet interaction to another frame
+ */
 export class RemoteProvider {
     target: Window
     targetUrl: string
@@ -65,9 +68,9 @@ function timeout(callback: (resolve: (value: any) => void, reject: (reason?: any
 export async function getRemoteProviderWhen(wallets: Array<string>, isInIframe= true) {
     const targetIsIframe = window.top !== window
     const uuid = uuid4()
-    let returnRemoteProvider = true
+    let returnRemoteProvider = false
     let targetUrl = '*'
-    if(isInIframe && targetIsIframe) {
+    if((isInIframe && targetIsIframe) || (!isInIframe && !targetIsIframe)) {
         try {
             returnRemoteProvider = await timeout((resolve)=> {
                 function listner({data: {uuid: receivedUuid, wallet}, origin}: MessageEvent) {
@@ -75,6 +78,7 @@ export async function getRemoteProviderWhen(wallets: Array<string>, isInIframe= 
                         targetUrl = origin
                         resolve(wallets.indexOf(wallet) !== -1)
                         window.removeEventListener('message', listner)
+                        returnRemoteProvider = true
                     }
                 }
                 window.addEventListener('message', listner)
@@ -83,7 +87,6 @@ export async function getRemoteProviderWhen(wallets: Array<string>, isInIframe= 
     
         } catch (error) {
             console.error("Proxy Provider seems not installed in your main frame", error)
-            returnRemoteProvider = false
         }
     }
     return returnRemoteProvider ? new RemoteProvider(window.parent, targetUrl) : (window as any).ethereum
